@@ -1,0 +1,201 @@
+@media print {
+
+
+@page {
+  size: A4 portrait;
+  margin: 10mm;
+}
+
+html, body {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+
+html, body, #root {
+  background: #fff !important;
+  color: #111 !important;
+}
+
+body * {
+  background: transparent !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+
+html, body, #root {
+  font-size: 9.5pt !important;
+  line-height: 1.2 !important;
+}
+
+.text-4xl { font-size: 16pt !important; }
+.text-3xl { font-size: 13pt !important; }
+.text-2xl { font-size: 12pt !important; }
+.text-xl  { font-size: 10.5pt !important; }
+.text-lg  { font-size: 10pt !important; }
+
+.text-red-700,
+.text-red-600,
+.text-red-500,
+.text-green-600 {
+  color: #111 !important;
+}
+
+
+.bg-gray-300 {
+  background: #e5e7eb !important;
+}
+
+h2.text-2xl {
+  background: transparent !important;
+  padding: 6px 8px !important;
+  margin: 0 !important;
+}
+
+
+.text-xl.border-2.border-black.font-bold.grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+  border-color: #111 !important;
+  background: #fff !important;
+}
+
+.text-xl.border-2.border-black.font-bold.grid > div.p-2 {
+  padding: 4px 6px !important;
+  background: #fff !important;
+}
+
+.text-xl.border-2.border-black.font-bold.grid > div {
+  min-width: 0 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+}
+
+
+table {
+  width: 100% !important;
+  max-width: 100% !important;
+  border-collapse: collapse !important;
+  table-layout: fixed !important;
+  background: #fff !important;
+}
+
+thead { display: table-header-group; }
+
+th, td {
+  padding: 4px 6px !important;
+  vertical-align: top !important;
+  color: #111 !important;
+  background: #fff !important;
+
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  white-space: normal !important;
+}
+
+thead th {
+  border: 1px solid #111 !important;
+  background: #f3f4f6 !important;
+  font-weight: 700 !important;
+}
+
+table thead th:nth-child(1),
+table tbody td:nth-child(1) { width: 38% !important; }
+
+table thead th:nth-child(2),
+table tbody td:nth-child(2) { width: 44% !important; }
+
+table thead th:nth-child(3),
+table tbody td:nth-child(3) { width: 18% !important; }
+
+
+.truncate {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+}
+
+
+tr.border-black.border-2 {
+  border: none !important;
+}
+
+tr.border-black.border-2 > td {
+  border: none !important;
+  background: #fff !important;
+  font-weight: 700 !important;
+}
+
+tr.border-black.border-2 > td {
+  border-top: 1px solid #111 !important;
+}
+
+
+tbody tr td.border-black.border-2 {
+  border: 1px solid #111 !important;
+}
+
+tbody tr td.border-black.border-2 + td {
+  border: 1px solid #111 !important;
+}
+
+tbody tr td.flex + td.border-black.border-2 {
+  border: 1px solid #111 !important;
+}
+
+td.flex {
+  display: table-cell !important;
+}
+
+td.flex > span {
+  display: inline !important;
+}
+
+td.flex > svg {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  margin-left: 6px !important;
+}
+
+
+tr, td, th {
+  page-break-inside: avoid;
+}
+
+
+.p-2.flex.justify-between {
+  font-size: 9.5pt !important;
+  margin-top: 6mm !important;
+}
+
+
+.min-h-screen {
+  min-height: auto !important;
+}
+
+.mx-auto {
+  margin: 0 !important;
+}
+
+body, #root {
+  margin: 0 !important;
+  padding: 0 !important;
+  height: auto !important;
+}
+
+body > *:last-child,
+#root > *:last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+html, body {
+  height: auto !important;
+  overflow: visible !important;
+}
+
+}
