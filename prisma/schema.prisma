@@ -1,0 +1,297 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  MEDIC
+  ASISTENT
+  REGISTRATOR
+}
+
+enum Administrator {
+  YES
+  NO
+}
+
+enum TypeResults {
+  TEXT
+  NUMBER
+}
+
+enum UmAge {
+  YEARS
+  MONTHS
+  DAYS
+}
+
+enum Sex {
+  MALE
+  FEMALE
+}
+
+
+
+model Pacients {
+  id Int @id @default(autoincrement())
+
+  first_name String
+  last_name String
+  cnp String @unique
+  date_of_birth DateTime
+  place_of_birth String?
+  phone_number String?
+  email String?
+  sex   Sex
+
+  domicile String?
+
+  lab_requests Lab_requests[]
+
+  createdAt DateTime @default(now())     @db.Timestamptz
+  updatedAt DateTime @updatedAt        @db.Timestamptz
+}
+
+model Lab_requests {
+  id Int @id @default(autoincrement())
+  rcode String @unique
+
+  patient_id Int
+  pacient   Pacients @relation(fields: [patient_id], references: [id])
+
+  requested_id Int
+  user Users @relation(fields: [requested_id], references: [id])
+
+  conform Conform[]
+
+  medic String
+  diagnostic String
+  cas_code String?
+  cas_number String?
+  cas_date String?
+  cas_diagnostic String?
+ 
+  payment_type Int?
+
+  description String?
+
+  sent          Boolean
+  deleted_date DateTime?
+  deleted_id Int?
+
+  verified Boolean @default(false)
+  verified_id Int?
+
+  createdAt DateTime @default(now())  @db.Timestamptz
+  updatedAt DateTime @updatedAt      @db.Timestamptz
+}
+
+model Investigations {
+  id Int @id @default(autoincrement())
+  machinesId Int
+  machines    Machines @relation(fields: [machinesId], references: [id])
+
+  refs Refs[]
+  
+  investigation_result Results[]
+
+  name String
+  code String
+
+  cas_name String?
+  cas_code String?
+
+  active Boolean @default(true)
+  printable Boolean @default(true)
+
+  work_method String?
+  is_renar Boolean?
+  export_cas Boolean @default(false)
+
+  createdAt DateTime @default(now())   @db.Timestamptz
+  updatedAt DateTime @updatedAt          @db.Timestamptz
+}
+
+model Refs {
+  id Int @id @default(autoincrement())
+  
+  investigation_id Int
+  investigation   Investigations @relation(fields: [investigation_id], references: [id])
+
+  normal_values Normal_values[]
+
+  refs_results Results[]
+
+  um  String?
+
+  name String
+  code String
+  type TypeResults
+
+  active Boolean @default(true)
+  printable Boolean @default(true)
+
+  createdAt DateTime @default(now())   @db.Timestamptz
+  updatedAt DateTime @updatedAt   @db.Timestamptz
+}
+
+model Nom_printable {
+  id        Int @id @default(autoincrement())
+  name      String
+
+  submitted Int
+
+  configurations   Printable_configuration[]
+
+  link      String
+  active    Boolean
+
+
+  createdAt DateTime @default(now())   @db.Timestamptz
+  updatedAt DateTime @updatedAt   @db.Timestamptz
+}
+
+model Printable_configuration {
+  id        Int @id @default(autoincrement())
+
+  id_printable Int
+  printables Nom_printable @relation(fields: [id_printable], references: [id])
+
+  action    String
+  value     String
+
+  active    Boolean
+
+  createdAt DateTime @default(now())   @db.Timestamptz
+  updatedAt DateTime @updatedAt   @db.Timestamptz
+}
+
+
+model Machines {
+  id Int @id @default(autoincrement())
+
+  domain_id Int
+  domains   Domain @relation(fields: [domain_id], references: [id])
+
+  lab_id Int?
+  investigations Investigations[]
+  results Results[]
+
+  name String
+
+  method String?
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())  @db.Timestamptz
+  updatedAt DateTime @updatedAt  @db.Timestamptz
+}
+
+model Normal_values {
+  id         Int    @id @default(autoincrement())
+
+  ref_id     Int
+  refs   Refs @relation(fields: [ref_id], references: [id])
+
+  um UmAge
+  sex  Sex
+
+  age_from Int
+  age_to   Int
+
+  min String?
+  max String?
+
+  createdAt DateTime @default(now())  @db.Timestamptz
+  updatedAt DateTime @updatedAt  @db.Timestamptz
+}
+
+model Users {
+  id   Int     @id @default(autoincrement())
+
+  email String @unique
+  passwordHash String @map("password")
+
+  requested_orders Lab_requests[]
+
+  employee_name String
+
+  roles  Role[] @default([])
+  sections String[]
+
+  lab_function String
+  administrator Boolean @default(false)
+
+  parafa String?
+  parafa_img String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt  @db.Timestamptz
+}
+
+model Results {
+  id Int @id @default(autoincrement())
+  request_id Int
+
+  machine_id Int
+  machine Machines? @relation(fields: [machine_id], references: [id])
+
+  investigation_id  Int
+  investigation Investigations @relation(fields: [investigation_id], references: [id])
+
+  ref_id Int?
+  ref Refs? @relation(fields: [ref_id], references: [id])
+
+  result String?
+
+  validated Boolean @default(false)
+  validatedId Int?
+  validated_date DateTime?
+
+  createdAt DateTime @default(now())  @db.Timestamptz
+  updatedAt DateTime @updatedAt  @db.Timestamptz
+
+   @@unique([request_id, investigation_id, ref_id])
+}
+
+model Conform {
+  id Int @id @default(autoincrement())
+
+  lab_request_id Int
+  lab_request Lab_requests @relation(fields: [lab_request_id] , references: [id])
+
+  domain_id Int
+  domain Domain @relation(fields: [domain_id], references: [id])
+  isConform Boolean @default(true)
+  notConform String?
+
+  arrival_date DateTime
+
+  createdAt DateTime @default(now())  @db.Timestamptz
+  updatedAt DateTime @updatedAt  @db.Timestamptz
+}
+
+model Domain {
+  id Int @id @default(autoincrement())
+
+  name String
+  id_laboratory Int?
+  
+  conforms Conform[]
+
+  machines Machines[]
+  
+  createdAt DateTime @default(now())  @db.Timestamptz
+  updatedAt DateTime @updatedAt  @db.Timestamptz
+}
+
+
